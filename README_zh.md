@@ -12,9 +12,9 @@ ST-FPC（Fold-Prediction-Correction），可用于替代MSNoise流程中Stack后
 
 * readsac.m 为SAC官方函数。
 
-* MATLAB需要保证python环境，以调用map_coordinates函数。
+* stretch.py 为MSNoise计算ST函数。
 
-* .py 为MSNoise计算ST函数。
+* MATLAB需要保证python环境，以调用map_coordinates函数。
 
 ### 算法解释
 
@@ -28,7 +28,7 @@ ST-FPC（Fold-Prediction-Correction），可用于替代MSNoise流程中Stack后
 
 ##### 图一是一段互相关函数波形-120~120s，黄色部分为选取的流逝时间窗口20~80s。拉伸时，原代码选用黄色部分数据点（包括置零的非窗口区），拉伸时间横轴再利用scipy.ndimage.map_coordinates 函数进行插值。计算CC时，使用拉伸后-120~120s全部数据点与非窗口区置零的Days数据点计算CC。
 
-![](ST_md_files/c755c4a0-e22c-11ef-b911-b3d360b4824a.jpeg?v=1&type=image)
+![](Figure/c755c4a0-e22c-11ef-b911-b3d360b4824a.jpeg?v=1&type=image)
 
 &#x20;
 
@@ -36,7 +36,7 @@ ST-FPC（Fold-Prediction-Correction），可用于替代MSNoise流程中Stack后
 
 ##### 首先对原python原代码进行复现，MATLAB中的插值函数interp1相较于map_coordinates缺少预滤波过程，效果不好，所以直接调用了python中的该函数。结果如图二所示，颜色代表CC大小（余图一致），基本复现原python代码。
 
-![](ST_md_files/93b826a0-e2d7-11ef-bda0-e3f385aefa20.jpeg?v=1&type=image)
+![](Figure/8dbdb1c0-e2d7-11ef-bda0-e3f385aefa20.jpeg?v=1&type=image)
 
 图二
 
@@ -50,13 +50,13 @@ ST-FPC（Fold-Prediction-Correction），可用于替代MSNoise流程中Stack后
 
 ##### 对于波形区段，我选择将波形对折取平均，选取窗口内的数据。结果如图三，仅通过对区段的选择，便使89%的CC有了平均约10%的提高。
 
-![](ST_md_files/fd30df30-e234-11ef-b911-b3d360b4824a.jpeg?v=1&type=image)
+![](Figure/31db0ce0-e2d7-11ef-bda0-e3f385aefa20.jpeg?v=1&type=image)
 
 图三
 
 ##### 对于外插问题，可以通过简单计算加长区段，即可保证外插部分全为有效值 。图四所示，Fold Width为加长区段的结果，可见85%CC均有小幅提升。
 
-![](ST_md_files/0ce2d0f0-e235-11ef-b911-b3d360b4824a.jpeg?v=1&type=image)
+![](Figure/0ce2d0f0-e235-11ef-b911-b3d360b4824a.jpeg?v=1&type=image)
 
 图四
 
@@ -68,49 +68,49 @@ ST-FPC（Fold-Prediction-Correction），可用于替代MSNoise流程中Stack后
 
 #####
 
-![](ST_md_files/01d53ce0-e2d8-11ef-bda0-e3f385aefa20.jpeg?v=1&type=image)
+![](Figure/01d53ce0-e2d8-11ef-bda0-e3f385aefa20.jpeg?v=1&type=image)
 
 图五
 
 ##### 图六中，利用Gauss4拟合所得到的offset呈现出一定横向分布特性，也就是与台站对的相关性，而钟差本身也就与各台站对有着对应关系，这样得到的offset或可认定为“钟差”
 
-![](ST_md_files/cdcceef0-e46e-11ef-ad60-9304b2563e4d.jpeg?v=1&type=image)
+![](Figure/9a4db2d0-e473-11ef-ad60-9304b2563e4d.jpeg?v=1&type=image)
 
 图六
 
 图七中纵轴为15个台站对，可见横向颜色相近条带，指示offset结果与台站对呈一定相关性
 
-![](ST_md_files/0b0b7de0-e46f-11ef-ad60-9304b2563e4d.jpeg?v=1&type=image)
+![](Figure/0b0b7de0-e46f-11ef-ad60-9304b2563e4d.jpeg?v=1&type=image)
 
 图7
 
 ##### 但此时的offset与波形相位关系并无直接联系，只是模拟的结果，且仅依据此时offset得到的CC结果仅半数略微改善，并不可靠，还需要结合CC来选取更为合适的offset
 
-![](ST_md_files/1f9fcc70-e52d-11ef-baf1-a700618c26d1.jpeg?v=1&type=image)
+![](Figure/1f9fcc70-e52d-11ef-baf1-a700618c26d1.jpeg?v=1&type=image)
 
 图八
 
 ##### 此外，Gauss拟合时依赖适当的参数选取，不当的参数对结果影响较大。如图，当不设置拟合初始值时，offset分布十分不均，存在明显误差。
 
-![](ST_md_files/438147e0-e474-11ef-ad60-9304b2563e4d.jpeg?v=1&type=image)
+![](Figure/438147e0-e474-11ef-ad60-9304b2563e4d.jpeg?v=1&type=image)
 
 图九
 
 ##### 但是如果只依靠CC的最大值作为offset，在设定范围内offset又会呈现出随机分布的特征，如图十。也就是说，无法完全依赖CC作为有效的参考指标。
 
-![](ST_md_files/1c80f5d0-e886-11ef-8864-3d63cc015e26.jpeg?v=1&type=image)
+![](Figure/1c80f5d0-e886-11ef-8864-3d63cc015e26.jpeg?v=1&type=image)
 
 图十
 
 ##### 再次观察其与台站分布相关性（图十一），注意到大量颜色交错带，即数据剧烈变化的振荡区域，此段offset一定不可认为钟差。
 
-![](ST_md_files/83dde800-e52a-11ef-baf1-a700618c26d1.jpeg?v=1&type=image)
+![](Figure/83dde800-e52a-11ef-baf1-a700618c26d1.jpeg?v=1&type=image)
 
 图十一
 
 ##### 受此启发，可识别出振荡区域，并将该区内不可靠的offset全部置零处理。加之边界限制，可见offset有了不小的改善。
 
-![](ST_md_files/96fe9370-e887-11ef-8864-3d63cc015e26.jpeg?v=1&type=image)
+![](Figure/96fe9370-e887-11ef-8864-3d63cc015e26.jpeg?v=1&type=image)
 
 图十二
 
@@ -122,51 +122,60 @@ ST-FPC（Fold-Prediction-Correction），可用于替代MSNoise流程中Stack后
 
 ##### 3. 最后利用校正的offset微调窗口，计算CC、取其最大时对应的拉伸系数作为Corr-dt/t
 
-![](ST_md_files/624f6590-eb7b-11ef-bb64-49bc940d885a.jpeg?v=1&type=image)
+![](Figure/624f6590-eb7b-11ef-bb64-49bc940d885a.jpeg?v=1&type=image)
 
 图十三
 
 ##### 至此考虑“钟差”校正的优化结果如图，相较Fold的结果，88%的CC有了一定提高
 
-![](ST_md_files/5ae41860-e2c4-11ef-b8f7-7fbcf1303d2b.jpeg?v=1&type=image)
+![](Figure/5ae41860-e2c4-11ef-b8f7-7fbcf1303d2b.jpeg?v=1&type=image)
 
 图十四
 
 ##### 最终，相较于原代码，97%的CC结果都有了平均约15%的提高。
 
-![](ST_md_files/cf4b1880-e2c3-11ef-b8f7-7fbcf1303d2b.jpeg?v=1&type=image)
+![](Figure/cf4b1880-e2c3-11ef-b8f7-7fbcf1303d2b.jpeg?v=1&type=image)
 
 图十五
 
 ##### 而CC的提高，让依据CC的加权平均成为可能， 所示仅为三点的加权平均结果，但速度变化已经十分稳定
 
-![](ST_md_files/644fe640-e2c4-11ef-b8f7-7fbcf1303d2b.jpeg?v=1&type=image)
+![](Figure/914b5820-eba5-11ef-b0c0-5937d7efb862.jpeg?v=1&type=image)
+
+
+
+
 
 图十六
+
+
+
+
+
+### 问题总结
 
 ##### 参考MSNoise1.6的代码， 通过Fold改变参与计算的波形，以及Gauss拟合、预报—校正系统和对振荡数据的筛除，最终在一定程度上改进了ST算法，提高了dt/t的CC。&#x20;
 
 ##### 但是仍然存在如下一些问题，&#x20;
 
-* 如何有效地选取合适的Gauss拟合参数或有什么更好的拟合方法？
-
 * ST的offset与mwcs的“钟差”相比如何？
+
+* 如何有效地选取合适的Gauss拟合参数或有什么更好的拟合方法？
 
 * offset振荡区除了置零是否还有更好的方法？
 
 * offset的分布可见一定纵向相关，或含有有某种周期性，是否可以拟合用以校正？
 
-* CC的选择上 Pearson系数中并不能此适配此问题，距离相关系数或MIC的效果如何呢？         &#x20;
+* CC的选择上Pearson系数似乎并不能很好适用此问题，距离相关系数或MIC的效果如何呢？         &#x20;
 
 *
 
 ##### 这些都需要进一步的研究，个人学习背景噪声时间较短，对相关问题理解尚不深入，对于本文中存在的任何问题，期待各位指正！
 
+***
+
 References
 
 [1]Obermann A, Hillers G. Chapter Two-Seismic time-lapse interferometry across scales [J]. Advance in Geophysics, 2019, 60: 65-143.
 
-[2]Stehly L., Campillo M., Shapiro N. M. 2007. Traveltime measurements from noise correlation: stability and detection of instrumental time-shifts. Geophys. J. Int., 171(4): 223-230.
-
-##### &#x20;    &#x20;
-
+[2]Stehly L., Campillo M., Shapiro N. M. 2007. Traveltime measurements from noise correlation: stability and detection of instrumental time-shifts. Geophys. J. Int., 171(4): 223-230.&#x20;

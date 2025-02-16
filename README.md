@@ -1,7 +1,5 @@
 # Stretching-optimization
 
-[MSNoise]: (http://www.msnoise.org "A Python Package for Monitoring Seismic Velocity Changes using Ambient Seismic Noise")
-
 [English](README.md) | [中文](README_zh.md)
 
 ***
@@ -10,7 +8,7 @@ As an English learner, I still don't have a good command of English. Thus, this 
 
 ***
 
-This document is on the optimization of the stretching code in [MSNoise1.6][MSNoise], particularly focusing on improving the ST (Stretching) algorithm by incorporating clock error correction. This is just a simple attempt, and the code remains rudimentary, with ideas yet to be fully validated. Fortunately, the code may not report error, if the paths are correctly configured.
+This document is on the optimization of the stretching code in [MSNoise1.6] (http://www.msnoise.org "A Python Package for Monitoring Seismic Velocity Changes using Ambient Seismic Noise"), particularly focusing on improving the ST (Stretching) algorithm by incorporating clock error correction. This is just a simple attempt, and the code remains rudimentary, with ideas yet to be fully validated. Fortunately, the code may not report error, if the paths are correctly configured.
 
 ##### Usage
 

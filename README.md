@@ -4,7 +4,7 @@
 
 ***
 
-As an English learner, I still don't have a good command of English. Thus, this document may inevitably contain some inaccuracies. Hopefully, that will not mislead you.
+As an English learner, I still have a poor command of English. Thus, this document may inevitably contain some inaccuracies. Hopefully, that will not mislead you.
 
 ***
 

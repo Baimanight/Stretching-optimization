@@ -201,7 +201,7 @@ Refer to MSNoise1.6 stretching, by modifying the waveform segment (Fold), Gaussi
 5. Would alternative correlation metrics (e.g., distance correlation, MIC) outperform Pearson’s CC?
 
 
-##### These questions warrant further investigation. My personal study on ambient noise is still relatively shallow, and my understanding of related issues is not yet deep. For any error, including issues in language expression, present in this article, I look forward to your corrections!
+##### These questions warrant further investigation. My personal study on ambient noise is still relatively shallow, and my understanding of related issues is not yet deep. For any error, including issues in language expression, present in this document, I look forward to your corrections!
 
 
 ***

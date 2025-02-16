@@ -8,13 +8,15 @@ As an English learner, I still don't have a good command of English. Thus, this 
 
 ***
 
-This document is on the optimization of the stretching code in [MSNoise1.6] (http://www.msnoise.org "A Python Package for Monitoring Seismic Velocity Changes using Ambient Seismic Noise"), particularly focusing on improving the ST (Stretching) algorithm by incorporating clock error correction. This is just a simple attempt, and the code remains rudimentary, with ideas yet to be fully validated. Fortunately, the code may not report error, if the paths are correctly configured.
+[MSNoise1.6](http://www.msnoise.org ) "A Python Package for Monitoring Seismic Velocity Changes using Ambient Seismic Noise"
 
-##### Usage
+This document is on the optimization of the stretching code in [MSNoise1.6](http://www.msnoise.org ), particularly focusing on improving the ST (Stretching) algorithm by incorporating clock error correction. This is just a simple attempt, and the code remains rudimentary, with ideas yet to be fully validated. Fortunately, the code may not report error, if the paths are correctly configured.
 
-The ST-FPC (Fold-Prediction-Correction) method is designed for the stretching calculation step after stacking in the MSNoise workflow. It integrates with MSNoise by using the STACKS directory as input. Parameters such as file path, lag time window, stretching range, and step size must be reconfigured in the code header.
+### Usage
 
-* readsac.m is an official SAC function.
+The ST_FPC (Fold-Prediction-Correction) is designed for the stretching calculation step after stacking in the MSNoise workflow. It integrates with MSNoise by using the STACKS directory as input. Parameters such as file path, lag time window, stretching range, and step size must be reconfigured in the code header.
+
+* readsac.m is an official SAC function, which should share the same folder with ST_FPC.m .
 
 * stretch.py is just the MSNoise for ST calculations.
 
@@ -24,9 +26,10 @@ The ST-FPC (Fold-Prediction-Correction) method is designed for the stretching 
 
 ### Code Explanation
 
-In my view, the MWCS (Moving Window Cross-Spectral) method is theoretically superior to ST (Stretching) for calculating velocity changes ($dv/v=-dt/t$) between reference (Ref) and daily (Days) waveforms. MWCS directly utilizes phase relationships to fit dt/t, whereas ST relies on the correlation coefficient (CC, Pearson) to determine dt/t(Obermann and Hillers, 2019), introducing two layers of distortion: from waveform to CC, and from CC to dt/t. However, ST involves fewer parameters and is simpler to implement, making it a practical reference.
+In my view, the MWCS (Moving Window Cross-Spectral) method is theoretically superior to ST (Stretching) for calculating velocity changes ( $dv/v=-dt/t$) between reference (Ref) and daily (Days) waveforms. MWCS directly utilizes phase relationships to fit dt/t, whereas ST relies on the correlation coefficient (CC, Pearson) to determine dt/t(Obermann and Hillers, 2019), introducing two layers of distortion: from waveform to CC, and from CC to dt/t. However, ST involves fewer parameters and is simpler to implement, making it a practical reference.
 
-The calculation of velocity changes $dt/t$ from empirical Green’s functions involves determining the stretching coefficient $a$ between waveforms Ref and Days, modeled as $f(x)$ vs. $f(ax + b)$. clock error manifests as the offset $b$ in this framework. Below, we discuss dt/t and offset separately, using test data from six nearby stations over several months.
+The calculation of velocity changes $dt/t$ from empirical Green’s functions involves determining the stretching coefficient 
+ $a$ between waveforms Ref and Days, modeled as  $f(x)$ vs.  $f(ax + b)$. clock error manifests as the offset  $b$ in this framework. Below, we discuss dt/t and offset separately, using test data from six nearby stations over several months.
 
 
 
@@ -39,7 +42,6 @@ First, the Ref waveform is stretched over a predefined range with incremental st
 Figure 1 shows a cross-correlation waveform (-120–120 s), with the yellow region marking the lag time window (20–80 s). During stretching, the original code(MSNoise1.6 stretching.py) selects data points within the yellow window (including non-window regions with zeroing), stretches the time axis via scipy.ndimage.map_coordinates, and computes CC using all stretched data points (-120–120 s) against the Days waveform (non-window regions zeroed).
 
 ![](Figure/c755c4a0-e22c-11ef-b911-b3d360b4824a.jpeg?v=1&type=image)
-
 Figure 1
 
 
@@ -65,9 +67,6 @@ Figure 3 shows that selecting valid segments increased CC values by ~10% for 89
 
 
 ![](Figure/31db0ce0-e2d7-11ef-bda0-e3f385aefa20.jpeg?v=1&type=image)
-
-
-
 Figure 3
 
 
@@ -77,21 +76,16 @@ Figure 3
 Figure 4 demonstrates that window extension slightly improved CC for 85% of cases.
 
 ![](Figure/0ce2d0f0-e235-11ef-b911-b3d360b4824a.jpeg?v=1&type=image)
-
-
-
 Figure 4
+
 
 ### Offset
 
-Unlike MWCS(Stehly et al. , 2007), ST lacks a robust method to handle clock error. A simple solution is to fit Ref and Days waveforms to some form of function expression, like$f(x)$ vs. $f(ax + b)$ , and then compare their coefficients for $b$ . However, directly aiming at the targret window seems difficult. After some attempts, this Gaussian fit based prediction-correction method has been developed.
+Unlike MWCS(Stehly et al., 2007), ST lacks a robust method to handle clock error. A simple solution is to fit Ref and Days waveforms to some form of function expression, like$f(x)$ vs. $f(ax + b)$ , and then compare their coefficients for $b$ . However, directly aiming at the targret window seems difficult. After some attempts, this Gaussian fit based prediction-correction method has been developed.
 
 Figure 5 shows the cross-correlation functions (yellow: Days, purple: Ref) for a station pair. As the full waveform resembles Gaussian distribution, taking the absolute value of the data and the difference of two centers (derived from 4th-order Gaussian fitting) suggests an estimated offset.
 
 ![](Figure/01d53ce0-e2d8-11ef-bda0-e3f385aefa20.jpeg?v=1&type=image)
-
-
-
 Figure 5
 
 
@@ -101,8 +95,7 @@ Figure 6 illustrates the horizontal distribution of offset derived from 4th-ord
 
 
 ![](Figure/9a4db2d0-e473-11ef-ad60-9304b2563e4d.jpeg?v=1&type=image)
-
-Figure 6￿
+Figure 6
 
 
 
@@ -110,7 +103,7 @@ Figure 7 There are 15 pairs of stations on the vertical axis, and horizontal ban
 
 ![](Figure/0b0b7de0-e46f-11ef-ad60-9304b2563e4d.jpeg?v=1&type=image)
 
-Figure 7￿
+Figure 7
 
 
 
@@ -118,7 +111,7 @@ It should be noted that the current offset has no direct correlation with wavefo
 
 ![](Figure/1f9fcc70-e52d-11ef-baf1-a700618c26d1.jpeg?v=1&type=image)
 
-Figure 8￿
+Figure 8
 
 
 
@@ -126,7 +119,7 @@ Additionally, proper fitting parameters are crucial to Gaussian fitting. Figure 
 
 ![](Figure/438147e0-e474-11ef-ad60-9304b2563e4d.jpeg?v=1&type=image)
 
-Figure 9￿
+Figure 9
 
 
 
@@ -154,13 +147,14 @@ Figure 12
 
 
 
-Considering above issues, the prediction-correction is recommended. Figure 13 illustrates the full workflow.
 
-1. Prediction: Gaussian fitting predicts an initial pre-offset. Comopute pre-dt/t with pre-offset.
+#### Considering above issues, the prediction-correction is recommended. Figure 13 illustrates the full workflow.
 
-2. Correction: Depending on the stretched waveform, corr-offset is determined by maximizing CC within the predicted offset's range. Eliminate the oscillation zone.
+#### 1. Prediction: Gaussian fitting predicts an initial pre-offset. Comopute pre-dt/t with pre-offset.
 
-3. With final corr-offset, recompute the corr-dt/t.
+#### 2. Correction: Depending on the stretched waveform, corr-offset is determined by maximizing CC within the predicted offset's range. Eliminate the oscillation zone.
+
+#### 3. With final corr-offset, recompute the corr-dt/t.
 
 ![](Figure/624f6590-eb7b-11ef-bb64-49bc940d885a.jpeg?v=1&type=image)
 
@@ -186,11 +180,11 @@ Figure 15
 
 Based on imporved CC, Figure 16 shows stable velocity changes if using a 3-point weighted average of CC.
 
-
-
 ![](Figure/914b5820-eba5-11ef-b0c0-5937d7efb862.jpeg?v=1&type=image)
 
 Figure 16
+
+
 
 ### Conclusion
 
@@ -206,7 +200,9 @@ Refer to MSNoise1.6 stretching, by modifying the waveform segment (Fold), Gaussi
 
 5. Would alternative correlation metrics (e.g., distance correlation, MIC) outperform Pearson’s CC?
 
-These questions warrant further investigation. The duration of my personal study on background noise has been relatively short, and my understanding of related issues is not yet deep. For any error or issues in language expression present in this article, I look forward to your corrections!
+
+##### These questions warrant further investigation. The duration of my personal study on background noise has been relatively short, and my understanding of related issues is not yet deep. For any error or issues in language expression present in this article, I look forward to your corrections!
+
 
 ***
 

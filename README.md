@@ -29,7 +29,7 @@ The ST_FPC (Fold-Prediction-Correction) is designed for the stretching calculat
 In my view, the MWCS (Moving Window Cross-Spectral) method is theoretically superior to ST (Stretching) for calculating velocity changes ( $dv/v=-dt/t$) between reference (Ref) and daily (Days) waveforms. MWCS directly utilizes phase relationships to fit dt/t, whereas ST relies on the correlation coefficient (CC, Pearson) to determine dt/t(Obermann and Hillers, 2019), introducing two layers of distortion: from waveform to CC, and from CC to dt/t. However, ST involves fewer parameters and is simpler to implement, making it a practical reference.
 
 The calculation of velocity changes $dt/t$ from empirical Green’s functions involves determining the stretching coefficient 
- $a$ between waveforms Ref and Days, modeled as  $f(x)$ vs.  $f(ax + b)$. clock error manifests as the offset  $b$ in this framework. Below, we discuss dt/t and offset separately, using test data from six nearby stations over several months.
+ $a$ between waveforms Ref and Days, modeled as  $f(x)$ vs.  $f(ax + b)$. Clock error manifests as the offset  $b$ in this framework. Below, we discuss dt/t and offset separately, using test data from six nearby stations over several months.
 
 
 

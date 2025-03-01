@@ -204,9 +204,7 @@ end
      [~,rightamp] = readsac(right_file{file_num}); 
   right = foldlr(rightamp',crepl,crepr,coffset(file_num));
 
-     for  strnum = 1:length(str_coeff)
-      coeffs(strnum) = corr(right',cREF_str(strnum,:)','type','Pearson');
-     end 
+coeffs = corr(right',cREF_str');
 
  max_index = fix(mean(find(coeffs == max(coeffs))));
 
@@ -235,9 +233,7 @@ ccoffset =  eliminate(ccoffset,maxdiff,dura_lag);
     [~,rightamp] = readsac(right_file{file_num});  
    cright =  foldlr(rightamp',crepl,crepr,ccoffset(file_num));
 
-    for  strnum = 1:length(str_coeff)
-     ccoeffs(strnum) = corr(cright',cREF_str(strnum,:)','type','Pearson');
-    end 
+ccoeffs = corr(cright',cREF_str')
 
   cmax_index = find(ccoeffs == max(ccoeffs)); 
   dvv(file_num) = -str_coeff(cmax_index);

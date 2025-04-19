@@ -5,8 +5,20 @@
 
 ##### 本文针对[MSNoise1.6](http://www.msnoise.org) 中stretching代码部分进行讨论，以及考虑钟差校正对ST算法进行优化。目前只是一个比较简单的尝试，代码部分较为粗糙，一些想法也有待验证。但是只要路径正确，就应该不会报错。。。
 
+### 后续更新
+
+2025 04 19：先前ST_FPC使用折叠方法，再参与均方差的计算，缺失了较多的数据信息，替换为ST_PC结果更为平滑；修复了eliminate函数的一些问题，但是仍建议使用新的方法进行剔除。
+![](Figure/smooth.jpg?v=1&type=image)
+
+同时测试了原ST_FPC多天叠加结果，对结果改善较好
+![](Figure/OFFSET.png?v=1&type=image)
+
+
+
 ### 使用方法
 
+ST_PC（Prediction-Correction） 修复了一些bug，同时优化了速度变化的稳定性，数学上也更合理，使用方法同ST_FPC。
+ 
 ST_FPC（Fold-Prediction-Correction），可用于替代MSNoise流程中Stack后的stretching计算部分。与[MSNoise](http://www.msnoise.org)结合使用，利用STACKS做为输入，结果输出到Str文件夹，参数需要在ST_FPC.m代码头部设置（文件路径、流逝时间窗口、拉伸范围、步长等）。
 
 * readsac.m 为SAC官方函数，需要与ST_FPC.m放于同一文件夹下。
@@ -140,7 +152,6 @@ ST_FPC（Fold-Prediction-Correction），可用于替代MSNoise流程中Stack后
 
 ![](Figure/914b5820-eba5-11ef-b0c0-5937d7efb862.jpeg?v=1&type=image)
 （图十六）
-
 
 
 

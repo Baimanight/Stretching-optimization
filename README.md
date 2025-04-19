@@ -12,10 +12,23 @@ As an English learner, I still have a poor command of English. Thus, this docume
 
 This document is on the optimization of the stretching code in [MSNoise1.6](http://www.msnoise.org ), particularly focusing on improving the ST (Stretching) algorithm by incorporating clock error correction. This is just a simple attempt, and the code remains rudimentary, with ideas yet to be fully validated. Fortunately, the code may not report error, if the paths are correctly configured.
 
+### Debug
+
+2025 04 19
+The original ST-FPC methodology employed a folding-based approach for MSE (Mean Squared Error) computation, which introduced structural inconsistencies and led to significant information degradation. In contrast, the upgraded ST-PC algorithm yields smoother operational profiles while fixing a bug in the legacy elimination module. Nevertheless, I maintain the recommendation to prioritize the updated elimination method for outlier rejection tasks.
+![](Figure/smooth.jpg?v=1&type=image)
+
+Btw a 20DAYS stack with ST_FPC suggests great advantages
+![](Figure/OFFSET.png?v=1&type=image)
+
+
+
 ### Usage
 
-The ST_FPC (Fold-Prediction-Correction) is designed for the stretching calculation step after stacking in the MSNoise workflow. It integrates with MSNoise by using the STACKS directory as input. Parameters such as file path, lag time window, stretching range, and step size must be reconfigured in the code header.
+The new ST_PC(Prediction-Correction）is highly recommended for archiving smoother velocity transitions and enhanced mathematical validity, sharing the same usage with the ST_FPC.
 
+The ST_FPC (Fold-Prediction-Correction) is designed for the stretching calculation step after stacking in the MSNoise workflow. It integrates with MSNoise by using the STACKS directory as input. Parameters such as file path, lag time window, stretching range, and step size must be reconfigured in the code header.
+  
 * readsac.m is an official SAC function, which should share the same folder with ST_FPC.m .
 
 * stretch.py is just the MSNoise for ST calculations.

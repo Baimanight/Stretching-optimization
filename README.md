@@ -16,9 +16,11 @@ This document is on the optimization of the stretching code in [MSNoise1.6](http
 
 2025 04 19
 The original ST-FPC methodology employed a folding-based approach for MSE (Mean Squared Error) computation, which introduced structural inconsistencies and led to significant information degradation. In contrast, the upgraded ST-PC algorithm yields smoother operational profiles while fixing a bug in the legacy elimination module. Nevertheless, I maintain the recommendation to prioritize the updated elimination method for outlier rejection tasks.
+
 ![](Figure/smooth.jpg?v=1&type=image)
 
 Btw a 20DAYS stack with ST_FPC suggests great advantages
+
 ![](Figure/OFFSET.png?v=1&type=image)
 
 
